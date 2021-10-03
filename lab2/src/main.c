@@ -14,7 +14,7 @@ Joystick E: P1.24
 */
 
 //section selection
-#define section 2
+#define section 3
 
 void set_LED (int LED_num, int val) {
 	LPC_GPIO1->FIODIR |= ((1u << 28) | (1u << 29) | (1u << 31));
@@ -49,11 +49,58 @@ int main(void) //1. push button LED
 {
 SystemInit();
 while(1){
-if((LPC_GPIO2->FIOPIN & (1u << 10))) {//set LED off
-	set_LED(28,0);
+//Joystick direction
+if(!(LPC_GPIO1->FIOPIN & (1u << 23))) { //checks if joystick north
+	printf("North");
 }
-else { //set LED on
-	set_LED(28,1);
+else if(!(LPC_GPIO1->FIOPIN & (1u << 26))) { //checks if joystick west
+	printf("West");
+}
+else if(!(LPC_GPIO1->FIOPIN & (1u << 25))) { //checks if joystick south
+	printf("South");
+}
+else if(!(LPC_GPIO1->FIOPIN & (1u << 24))) { //checks if joystick east
+	printf("East");
+}
+else {
+	printf("Centered");
+}
+//Joystick button
+if(!(LPC_GPIO1->FIOPIN & (1u << 20))) {//checks if joystick pressed
+	printf(" and joystick is pressed\n");
+}
+else {
+	printf(" and joystick is not pressed\n");
+}
+}
+}
+#elif section == 3
+int main(void) //1. push button LED
+{
+SystemInit();
+while(1){
+//Joystick direction
+if(!(LPC_GPIO1->FIOPIN & (1u << 23))) { //checks if joystick north
+	printf("North");
+}
+else if(!(LPC_GPIO1->FIOPIN & (1u << 26))) { //checks if joystick west
+	printf("West");
+}
+else if(!(LPC_GPIO1->FIOPIN & (1u << 25))) { //checks if joystick south
+	printf("South");
+}
+else if(!(LPC_GPIO1->FIOPIN & (1u << 24))) { //checks if joystick east
+	printf("East");
+}
+else {
+	printf("Centered");
+}
+//Joystick button
+if(!(LPC_GPIO1->FIOPIN & (1u << 20))) {//checks if joystick pressed
+	printf(" and joystick is pressed\n");
+}
+else {
+	printf(" and joystick is not pressed\n");
 }
 }
 }
