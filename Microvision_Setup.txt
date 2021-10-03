@@ -1,0 +1,23 @@
+Options:
+Device: LPC1768
+Packages: CMSIS Core
+Device -> Startup
+
+Target Options (Simulator):
+- C/C++
+	- Define:__RTGT_UART
+	- C99 Mode
+- Linker
+	- Use Memory Layout from Target Dialog
+- Target
+	- Compiler version 5
+- Debug
+	- Use Simulator
+		- Load Initialization file "BoardSimulator.ini"
+	- Ensure Dialog DLL says: "DARMP1.DLL"
+	- Parameter: "-pLPC1768"
+- Output
+	- Select folder for objects
+- Listing
+	- Select folder, create new folder "SIM"
+Device>startup.s>Configuration Wizard
