@@ -14,8 +14,8 @@ Joystick E: P1.24
 */
 
 //section selection
-#define section 3
-
+//#define section 3
+/*
 void set_LED (int LED_num, int val) {
 	LPC_GPIO1->FIODIR |= ((1u << 28) | (1u << 29) | (1u << 31));
 	LPC_GPIO2->FIODIR |= ((1u << 2) | (1u << 3) | (1u << 4) | (1u << 5) | (1u << 6));
@@ -75,33 +75,21 @@ else {
 }
 }
 #elif section == 3
+*/
 int main(void) //1. push button LED
 {
+int receive[100] = {0};
 SystemInit();
+UARTInit(1, 115200);
+
 while(1){
-//Joystick direction
-if(!(LPC_GPIO1->FIOPIN & (1u << 23))) { //checks if joystick north
-	printf("North");
-}
-else if(!(LPC_GPIO1->FIOPIN & (1u << 26))) { //checks if joystick west
-	printf("West");
-}
-else if(!(LPC_GPIO1->FIOPIN & (1u << 25))) { //checks if joystick south
-	printf("South");
-}
-else if(!(LPC_GPIO1->FIOPIN & (1u << 24))) { //checks if joystick east
-	printf("East");
-}
-else {
-	printf("Centered");
-}
-//Joystick button
-if(!(LPC_GPIO1->FIOPIN & (1u << 20))) {//checks if joystick pressed
-	printf(" and joystick is pressed\n");
-}
-else {
-	printf(" and joystick is not pressed\n");
+	for(int x=0; x<100; x++) {
+		receive[x] = UARTReceiveChar(1);
+		printf("beach");
+	}
+//ascii 10
+//-30
+//convert to binary
 }
 }
-}
-#endif
+//#endif
