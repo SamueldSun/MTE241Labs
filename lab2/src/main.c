@@ -136,7 +136,7 @@ while(1){
 	for(int i=0; i<8; i++) {
 		int bitmask = (1u << i);
 		if((input_sum & (1u << i))) {
-			set_LED(i+1,1);
+			set_LED(8-i,1);
 		}
 	}
 }
