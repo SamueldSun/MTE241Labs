@@ -2,19 +2,8 @@
 #include "stdio.h"
 #include "uart.h"
 
-/* Pins 
-Pushbutton: P2.10
-Leftmost LED: P1.28
-Rightmost LED: P2.6
-Joystick button: P1.20
-Joystick N: P1.23
-Joystick W: P1.26
-Joystick S: P1.25
-Joystick E: P1.24
-*/
-
 //section selection
-#define section 3
+#define section 4
 
 void set_LED (int LED_num, int val) { //val = 0 is off, val = 1 is on, val = 2 is all LEDs off
 	int port = 0;
@@ -74,6 +63,19 @@ void set_LED (int LED_num, int val) { //val = 0 is off, val = 1 is on, val = 2 i
 		LPC_GPIO2->FIOCLR = (1u << LED_num);
 }
 
+void init_adc() {
+	LPC_SC->PCONP |= 1u << 12;	// PCADC on bit 12
+	LPC_ADC->ADCR |= 1u << 21; // ADC power on pin 21
+	
+	LPC_SC->PCLKSEL0 |= (0u <<25) | (1u <<25); // Clock select dividers
+	
+	LPC_PINCON->PINSEL1 |= (0u << 19) | (1u << 18); // Pin select for 01
+	
+	LPC_ADC->ADCR &= 0xffffff00;
+	LPC_ADC->ADCR |= 1u << 2;
+}
+
+
 #if section == 1
 int main(void) //1. push button LED
 {
@@ -121,24 +123,43 @@ else {
 #elif section == 3
 int main(void) //3. uart LED
 {
-SystemInit();
-UARTInit(1, 115200);
-set_LED(0,2); //set all LEDs off
-while(1){
-	int curr_input = 0;
-	int input_sum = 0;
-	while(curr_input != 10) {
-		curr_input = UARTReceiveChar(1);
-		if(curr_input != 10)
-			input_sum = 10*input_sum+(curr_input-48);
-	}
-	set_LED(0,2);
-	for(int i=0; i<8; i++) {
-		int bitmask = (1u << i);
-		if((input_sum & (1u << i))) {
-			set_LED(8-i,1);
+	SystemInit();
+	UARTInit(1, 115200);
+	set_LED(0,2); //set all LEDs off
+	while(1){
+		int curr_input = 0;
+		int input_sum = 0;
+		while(curr_input != 10) {
+			curr_input = UARTReceiveChar(1);
+			if(curr_input != 10)
+				input_sum = 10*input_sum+(curr_input-48);
+		}
+		set_LED(0,2);
+		for(int i=0; i<8; i++) {
+			int bitmask = (1u << i);
+			if((input_sum & (1u << i))) {
+				set_LED(8-i,1);
+			}
 		}
 	}
 }
+#elif section == 4
+int main(void) //4. ADC readout
+{
+	SystemInit();
+	init_adc();
+	
+	while(1){		
+		LPC_ADC->ADCR |= (1 << 24);
+		
+		while ((LPC_ADC->ADGDR & 1u << 31) == 0) {}
+		
+		
+		float voltage = 0;
+		voltage = (LPC_ADC->ADGDR & 0xfff << 4);
+		voltage /= 19856;
+		printf("%.2f\n",voltage);
+	}
 }
+
 #endif
