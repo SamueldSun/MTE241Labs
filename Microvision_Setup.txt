@@ -21,3 +21,12 @@ Target Options (Simulator):
 - Listing
 	- Select folder, create new folder "SIM"
 Device>startup.s>Configuration Wizard
+
+
+
+~~~ RTX_Congfig.h ~~~
+System Configuration
+ > Global Dynamic Memory Size -> 4096
+Thread Configuration
+ > Default Thread Stack Size  -> 512
+ > Idle Thread Stack Size     -> 256

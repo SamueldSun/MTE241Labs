@@ -9,7 +9,7 @@
 #include "uart.h"
 
 // Section selection
-#define section 1
+#define section 4
 
 // Turn specific LED on or off
 void set_LED (int LED_num, int stat) {
