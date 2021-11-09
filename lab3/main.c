@@ -219,8 +219,9 @@ __NO_RETURN void app_main (void *arg) {
 	osThreadNew(t2, NULL, NULL); // Task 2: Joystick Location
 	osThreadNew(t3, NULL, NULL); // Task 3: ADC Reading
 	
-	printf("app main...\n");
+	
 	for (;;) {	
+		printf("app main...\n");
 		osDelay(50);
 	}
 }
